@@ -15,12 +15,12 @@ As expirimental dataset the Cystic Fibrosis collection was used (REF: http://www
 
 ## How to use it
 
-At first we need to extract the main text from our texual data. The main text is expressed by the abstract of each document, thus the "tesxtparser.py" is used. Using specific acronyms which the CF collection supports it extracts each part of each document and stores the needed data in a specific path. _IMPORTANT note: paths need to be altered depending on your machine_
+At first we need to extract the main text from our texual data. The main text is expressed by the abstract of each document, thus the "tesxtparser.py" is used. Using specific acronyms which the CF collection supports it extracts each part of each document and stores the needed data in a specific path. _IMPORTANT note: paths need to be altered depending on your machine_.
 
 After, the "preproccess.py" handles the data preproccess functions. In this step, the tokenization and stopword filltering  proccesses are taking place.
 The queries is extracted with "queryparser.py" and pasted as a list in the "main.py"-main function. The main function was used through the mainautomation script which inputs as arguments the testing parameters. 
 
-
+There are **two** key points that require attention. Firstly, the inverted indexes should get renamed after each expiriment because the new inverted index will not overwrite the old one but it will get appended in the old file. Last but not least, on each collection change, such as different preproccess the docinfo.dat should get manually cleared or deleted. 
 
 ## Citation
 
