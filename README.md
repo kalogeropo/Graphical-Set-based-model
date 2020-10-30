@@ -20,7 +20,9 @@ At first we need to extract the main text from our texual data. The main text is
 After, the "preproccess.py" handles the data preproccess functions. In this step, the tokenization and stopword filltering  proccesses are taking place.
 The queries is extracted with "queryparser.py" and pasted as a list in the "main.py"-main function. The main function was used through the mainautomation script which inputs as arguments the testing parameters. 
 
-There are **two** key points that require attention. Firstly, the inverted indexes should get renamed after each expiriment because the new inverted index will not overwrite the old one but it will get appended in the old file. Last but not least, on each collection change, such as different preproccess the docinfo.dat should get manually cleared or deleted. 
+_There are **two** key points that require attention. Firstly, the inverted indexes should get renamed after each expiriment because the new inverted index will not overwrite the old one but it will get appended in the old file. Last but not least, on each collection change, such as different preproccess the docinfo.dat should get manually cleared or deleted._
+
+As query testing we offer 4 inverted indexes with importance h=700 and prunning percentage p=0.2 ready to load, or some can use the original documents, but we highly recommend to use the new preproccessed documents on the acompanied .rar file or at least a preproccessed version of them due to hardware issuses. 
 
 ## Citation
 
