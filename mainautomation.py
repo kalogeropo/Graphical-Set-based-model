@@ -1,5 +1,3 @@
-
-
 import os
 import shutil
 
@@ -9,16 +7,23 @@ import shutil
 #executes the command python3| main.py| h| S| menu_one answer| menu_two_anwser
 #where main.py has been modified to get the anwsers from arguments and not as a keyboard input!
 
-#os.system('python3 main.py 2000 1.2 1 3')
-#os.system('python3 main.py 2000 1.2 1 4')
-#os.system('python3 main.py 2000 1.2 2')
 
-#os.system('python3 main.py 700 0.2 1 1')
-#os.system('python3 main.py 700 0.2 1 2')
-#os.system('python3 main.py 700 0.2 1 3')
-#os.system('python3 main.py 700 0.2 1 4')
-#os.system('python3 main.py 700 0.2 2')
+#for windows 10 os: os.system('python main.py H P MENU_OPTION_1 MENU_OPTION_2')
+#at quering proccess menu_option_1 =2 and there is no menu_option_2
 
+#os.system('python main.py 2000 1.2 1 3')
+#os.system('python main.py 2000 1.2 1 4')
+#os.system('python main.py 2000 1.2 2')
+
+#os.system('python main.py 700 0.2 1 1')
+#os.system('python main.py 700 0.2 1 2')
+#os.system('python main.py 700 0.2 1 3')
+#os.system('python main.py 700 0.2 1 4')
+os.system('python main.py 700 0.2 2')
+
+
+#for linux os: os.system('python3 main.py H P MENU_OPTION_1 MENU_OPTION_2')
+#at quering proccess menu_option_1 =2 and there is no menu_option_2
 
 #os.system('python3 main.py 700 0.3 1 1')
 #os.system('python3 main.py 700 0.3 1 2')
@@ -105,8 +110,8 @@ os.system('python3 main.py 100 0.3 2')
 
 h=100
 S= "03"
-src = "/home/nik/PycharmProjects/k-core-decomp/figures/allq"
-path = "/home/nik/PycharmProjects/k-core-decomp/figures"
+src = "figures/allq"
+path = "figures"
 
 namelist = ['h',str(h),'ee',str(S),"avn"]
 name = "".join(namelist)
@@ -117,7 +122,7 @@ shutil.move(src, dirpath)
 targets = ["CoreRankfile.dat","newfile.dat","invertedindex.dat","densfile.dat","docinfo.dat"]
 
 os.mkdir(src)
-for file in os.listdir("/home/nik/PycharmProjects/k-core-decomp"):
+for file in os.listdir("C:/Users/nrkal/PycharmProjects/Graphical-Set-based-model"):
     if file in targets:
         shutil.move(file, dirpath)
 
