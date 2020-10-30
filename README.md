@@ -11,7 +11,7 @@ After the 4 inverted indexes are created through the starting menu function we d
 
 ## Dataset
 
-As expirimental dataset the Cystic Fibrosis collection was used (REF: http://www2.dcc.ufmg.br/livros/irbook/cfc.html ). The CF collection consists of 1239 documents-articles, including author, refrences, abstract and more information. Also it includes 100 queries and the most relevant documents for each query. The ranking proccess handled by experts using "a grade" ranking proccess.
+As expirimental dataset the Cystic Fibrosis collection was used (REF: http://www2.dcc.ufmg.br/livros/irbook/cfc.html ). The CF collection consists of 1239 documents-articles, including author, references, citations, abstract and more information. Also it includes 100 queries and the most relevant documents for each query. The ranking proccess handled by experts using "a grade" ranking proccess.
 
 ## How to use it
 
