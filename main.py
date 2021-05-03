@@ -69,16 +69,37 @@ def uniongraph(terms, term_freq, adjmatrix, collection_terms, union_graph_termli
     return terms, adjmatrix, collection_terms, union_graph_termlist_id, union_gr, id, collection_term_freq
 
 
-def runIt(filename, ans):
+def runIt(filename, ans, window_flag, window_size):
     print(filename)
     temp = createInvertedIndexFromFile(filename, postinglist)
     # temp[0] = terms | temp[1] = term freq | temp[2] = posting list | temp 3 = doc number of words
-    try:
-        adjmat = CreateAdjMatrixFromInvIndex(temp[0], temp[1])
-    except MemoryError:
-        sizeof_err_matrix = sys.getsizeof(adjmat)
-        print(sizeof_err_matrix)
-        exit(-1)
+
+    #######TEST############
+    # print(temp[0])
+    # print('\n')
+    # print(temp[1])
+    # print('\n')
+    # print(temp[2])
+    # print('\n')
+    # print(temp[3])
+    # print('\n')
+
+    if window_flag:
+        try:
+            adjmat = CreateAdjMatrixFromInvIndexWithWindow(temp[0], filename, window_size)
+        except MemoryError:
+            sizeof_err_matrix = sys.getsizeof(adjmat)
+            print(sizeof_err_matrix)
+            exit(-1)
+
+    else:
+        try:
+            adjmat = CreateAdjMatrixFromInvIndex(temp[0], temp[1])
+        except MemoryError:
+            sizeof_err_matrix = sys.getsizeof(adjmat)
+            print(sizeof_err_matrix)
+            exit(-1)
+    #######################
     try:
         gr = graphUsingAdjMatrix(adjmat, temp[0])
         docinfo.append([filename, temp[3]])
@@ -99,7 +120,7 @@ def runIt(filename, ans):
         # By creating new graph we can translate it easily to the respective adj matrix
         # without calculating each edge weight separtly. It returns a pruned GRAPH
 
-        prunedgr = pruneGraphbyWeight(adjmat,temp[0])
+        prunedgr = pruneGraphbyWeight(adjmat, temp[0])
         if not nx.is_empty(prunedgr):
             kcore = k_core(prunedgr)
             kcore_nodes = kcore.nodes
@@ -113,70 +134,81 @@ def runIt(filename, ans):
         # print(kcore.degree())
     if ans == 3:
         print("Density method: \n ")
-        prunedgr = pruneGraphbyWeight(adjmat,temp[0])
+        prunedgr = pruneGraphbyWeight(adjmat, temp[0])
         if not nx.is_empty(prunedgr):
             cores = core_number(prunedgr)
             nlevels = []
-            for key in cores.keys() :
-                #term = temp[0][key] -> print(term) -> translate node ids to real words if needed
+            for key in cores.keys():
+                # term = temp[0][key] -> print(term) -> translate node ids to real words if needed
                 if cores[key] not in nlevels:
                     nlevels.append(cores[key])
             density_list = []
             for n in nlevels:
-                kcoregraph = k_core(prunedgr,n,cores)
-                #DEBUG
-                #print("for n = %d" %n)
-                #print(nx.info(kcoregraph))
+                kcoregraph = k_core(prunedgr, n, cores)
+                # DEBUG
+                # print("for n = %d" %n)
+                # print(nx.info(kcoregraph))
                 density_list.append(density(kcoregraph))
             bestindex = elbow(density_list)
             bestcore = nlevels[bestindex]
-            print("using as k core %d" %bestcore)
-            kcore = k_core(prunedgr,bestcore,cores)
+            print("using as k core %d" % bestcore)
+            kcore = k_core(prunedgr, bestcore, cores)
             kcore_nodes = kcore.nodes
-            #print(cores)
+            # print(cores)
             print(nlevels)
             prunedadjm = nx.to_numpy_array(prunedgr, weight='weight')
         else:
             prunedadjm = adjmat
             docs_without_main_core.append(filename)
-    if ans == 4 :
+    if ans == 4:
         print("CoreRank method: \n ")
         prunedgr = pruneGraphbyWeight(adjmat, temp[0])
         if not nx.is_empty(prunedgr):
             cores = core_number(prunedgr)
-            CoreRank = [] #the score of the sums
-            label = [] #the name of node corerank and label is connected via their index
+            CoreRank = []  # the score of the sums
+            label = []  # the name of node corerank and label is connected via their index
             for nd in prunedgr:
                 sum = 0
                 label.append(nd)
-                #print('for node :',nd)
+                # print('for node :',nd)
                 for nbrs in prunedgr.neighbors(nd):
-                    #print(cores[nbrs])
+                    # print(cores[nbrs])
                     sum += cores[nbrs]
                 CoreRank.append(sum)
-                #print("for core %d the sum is %d" %(nd,sum))
-            #print(label)
-            #print(CoreRank)
-            zipped_list = zip(label,CoreRank)
-            s_zipped_list = sorted(zipped_list,key=itemgetter(1), reverse=True)
+                # print("for core %d the sum is %d" %(nd,sum))
+            # print(label)
+            # print(CoreRank)
+            zipped_list = zip(label, CoreRank)
+            s_zipped_list = sorted(zipped_list, key=itemgetter(1), reverse=True)
             no_of_words = len(s_zipped_list)
-            core_size = round(no_of_words*0.3) #!!!!!!!!!!! test 0.15 most test was on .30.only those that explicitly
+            core_size = round(
+                no_of_words * 0.3)  # !!!!!!!!!!! test 0.15 most test was on .30.only those that explicitly
             # states .15 were done that way
             print(core_size)
             kcore_nodes = []
             for i in range(core_size):
-                #print(s_zipped_list[i][0])
+                # print(s_zipped_list[i][0])
                 kcore_nodes.append(s_zipped_list[i][0])
             print("============")
-            print("At a total of %d words the 0.3 was %d and the core size was %d"%(no_of_words,core_size,len(kcore_nodes)))
+            print("At a total of %d words the 0.3 was %d and the core size was %d" % (
+            no_of_words, core_size, len(kcore_nodes)))
             prunedadjm = nx.to_numpy_array(prunedgr, weight='weight')
         else:
             prunedadjm = adjmat
             docs_without_main_core.append(filename)
+
+    ###################TEST####################
+    if ans == 5:
+        print("Calculating without maincore:")
+        prunedadjm = adjmat
+        kcore_nodes = []
+
+    #########################################################
+
     if ans == 2:
         print("Calculating without maincore:")
         prunedadjm = adjmat
-        kcore_nodes =[]
+        kcore_nodes = []
     term_freq = temp[1]
     # print(term_freq)
     return adjmat, temp[0], gr, term_freq, kcore_nodes, prunedadjm  # adjacency matrix terms list , graph
@@ -213,33 +245,48 @@ print(menu)
 S = menu[2]
 hargs=menu[1]
 menu = menu[0]
-if len(sys.argv)== 5:
+if len(sys.argv)== 6:
     X = sys.argv[4]
-elif len(sys.argv)!=4:
+elif len(sys.argv)!=5:
     print("some error here")
     exit(-99)
 
 
+
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!if menu==1 implement
 if menu == 1:
-    #X = input(' 1.create index using maincore \n 2.create index without considering maincore \n 3.Create index using Density method \n 4.Create index using CoreRank method\n' )
+# X = input(' 1.create index using maincore \n 2.create index without considering maincore \n 3.Create index using Density method \n 4.Create index using CoreRank method\n' )
     if int(X) == 1:
         corebool = True
+        window_size = 20
+        splitfiles = False
         invfilename = 'newfile.dat'
     elif int(X) == 2:
         corebool = False
+        window_size = 20
+        splitfiles = False
         invfilename = 'invertedindex.dat'
     elif int(X) == 3:
         corebool = True
+        window_size = 20
+        splitfiles = False
         invfilename = 'densfile.dat'
     elif int(X) == 4:
         corebool = True
+        window_size = 20
+        splitfiles = False
         invfilename = 'CoreRankfile.dat'
-    un_start = time.time()
-    start = time.time()
-    remaining = len(os.listdir('txtfiles')) + 1
-    for name in file_list:
-        remaining -= 1
+        ########TEST##############
+    elif int(X) == 5:
+        splitfiles = True
+        window_size = int(sys.argv[5])
+        corebool = False
+        invfilename = 'ConstantWindFile.dat'
+        ##########################
+
+        un_start = time.time()
+        start = time.time()
+        remaining = len(os.listdir('txtfiles')) + 1
 
         print(remaining)
         name = name[0]
