@@ -4,21 +4,28 @@ from math import log
 import numpy
 import sys
 
+import collections
 import matplotlib.pyplot as plt
 import networkx as nx
 
 import string
+
+import nltk
+from nltk.corpus import stopwords
+
 translator = str.maketrans('', '', string.punctuation)
 
 from operator import itemgetter
 
-
 from networkx import core_number, k_core
 import csv
-#buggy na xrisimopoii8ei i proepeksergasia pou exei dimiourgi8ei san ksexwristo .py
+
+# buggy na xrisimopoii8ei i proepeksergasia pou exei dimiourgi8ei san ksexwristo .py
 postinglist = []
 docinfo = []
-docs_without_main_core =[]
+docs_without_main_core = []
+
+
 def preproccess(file):
     with open(file, 'r') as fd:
         text = fd.read().split()
@@ -34,76 +41,6 @@ def preproccess(file):
                 fd.write("%s \n" % term)
     fd.close()
     return 1
-
-
-def createInvertedIndexFromFile(file, postingl):
-    with open(file, 'r') as fd:
-        # list containing every word in text document
-        text = fd.read().split()
-        uninque_terms = []
-        termFreq = []
-        for term in text:
-            if term not in uninque_terms:
-                uninque_terms.append(term)
-                termFreq.append(text.count(term))
-            if term not in postingl:
-                postingl.append(term)
-                postingl.append([file, text.count(term)])
-            else:
-                existingtermindex = postingl.index(term)
-                if file not in postingl[existingtermindex + 1]:
-                    postingl[existingtermindex + 1].extend([file, text.count(term)])
-    # print(len(uninque_terms))
-    # print(termFreq)
-    return (uninque_terms, termFreq, postingl, len(text))
-
-    ###############################lemmas################################
-    # Weight_of_edge(i,j) = No.occurencies_of_i * No.occurencies_of_j   #
-    #####################################################################
-
-
-# using as an input the terms and the term frequency it creates the adjacency matrix of the graph
-# in the main diagon we have the Win of each node of the graph and by the sum of each colume
-# except the element of the diagon  is the  Wout of each node
-# For more info see LEMMA 1 and LEMMA 2 of P: A graph based extension for the Set-Based Model, A: Doukas-Makris
-def CreateAdjMatrixFromInvIndex(terms, tf):
-    # print("Adj_Matrix = %d * %d " % (len(terms), len(tf)))
-    rows = numpy.array(tf)
-    row = numpy.transpose(rows.reshape(1, len(rows)))
-    col = numpy.transpose(rows.reshape(len(rows), 1))
-    adj_matrix = numpy.array(numpy.dot(row, col))
-    #fullsize = rows.size + row.size + col.size + adj_matrix.size
-    #print(fullsize / 1024 / 1024)
-    for i in range(len(adj_matrix)):
-        for j in range(len(adj_matrix)):
-            if i == j:
-                adj_matrix[i][j] = rows[i] * (rows[i] + 1) * 0.5
-    # print(adj_matrix)
-    del row, rows, col
-    return (adj_matrix)
-
-    ################################################################################################
-    # For each node we calculate the sum of the elements of the respective row or colum of its index#
-    # as its degree                                                                                 #
-    ################################################################################################
-
-
-# computes the degree of every node using adj matrix
-def Woutdegree(mat):
-    list_of_degrees = numpy.sum(mat, axis=0)
-    list_of_degrees = numpy.asarray(list_of_degrees)
-    id = []
-    # print(list_of_degrees)
-    # print(numpy.size(list_of_degrees))
-    for k in range(numpy.size(list_of_degrees)):
-        id.append(k)
-        list_of_degrees[k] -= mat[k][k]
-    list_of_degrees.tolist()
-    return list_of_degrees, id
-
-
-def sortByDegree(val):
-    return val[0]
 
 
 # todo: more efficient way to calculate max length of path it doesnt work on realistic scale (CANT BE DONE BECAUSE THE COMPLEXITY)
@@ -162,8 +99,6 @@ def node_simi(adjmatrix):
     return max, min
 
 
-
-
 # deletes by re drawing the graph edges of the graph given a minimum similarity
 def pruneGraphbySimilarity(aMatrix, pers, minsim, termName):
     g = nx.Graph()
@@ -183,7 +118,7 @@ def graphUsingAdjMatrix(adjmatrix, termlist, *args, **kwargs):
     gr = nx.Graph()
     filename = kwargs.get('filename', None)
     if not filename:
-        filename = 'Name not found!' #used when i want to visualize graphs with name
+        filename = 'Name not found!'  # used when i want to visualize graphs with name
 
     for i in range(0, len(adjmatrix)):
         gr.add_node(i, term=termlist[i])
@@ -195,11 +130,21 @@ def graphUsingAdjMatrix(adjmatrix, termlist, *args, **kwargs):
 
 
 # ------------------Graph visualization---------------
+
+def getGraphStats(graph, filename, graphPng, degreePng):
+    if nx.is_connected(graph):
+        print("IT IS CONNECTED")
+    name = filename[10:]
+    if graphPng:
+        graphToPng(graph=graph, filename=str(name))
+    if degreePng:
+        plot_degree_dist(graph=graph, filename=str(name))
+
+
 def graphToPng(graph, *args, **kwargs):
     options = {
         'node_color': 'yellow',
         'node_size': 50,
-        'line_color': 'grey',
         'linewidths': 0,
         'width': 0.1,
         'font_size': 8,
@@ -223,7 +168,70 @@ def graphToPng(graph, *args, **kwargs):
 
     labels = nx.get_edge_attributes(graph, 'weight')
     nx.draw_networkx_edge_labels(graph, pos_nodes, edge_labels=labels)
-    plt.show()
+    # plt.show()
+    plt.savefig('figures/allq/' + str(filename) + '.png', format="PNG", dpi=600)
+
+
+def plot_degree_dist(graph, *args, **kwargs):
+    filename = kwargs.get('filename', None)
+    degree_sequence = sorted([d for n, d in graph.degree()], reverse=True)  # degree sequence
+    degreeCount = collections.Counter(degree_sequence)
+    deg, cnt = zip(*degreeCount.items())
+
+    fig, ax = plt.subplots()
+    plt.bar(deg, cnt, width=0.80, color="b")
+
+    plt.title("Degree Histogram")
+    plt.ylabel("Count")
+    plt.xlabel("Degree")
+    ax.set_xticks([d + 0.4 for d in deg])
+    plt.setp(ax.get_xticklabels(), rotation=90, horizontalalignment='right', fontsize=3)
+    ax.set_xticklabels(deg)
+
+    # draw graph in inset
+    plt.axes([0.4, 0.4, 0.5, 0.5])
+    Gcc = graph.subgraph(sorted(nx.connected_components(graph), key=len, reverse=True)[0])
+    pos = nx.spring_layout(graph)
+    plt.axis("off")
+    nx.draw_networkx_nodes(graph, pos, node_size=20)
+    nx.draw_networkx_edges(graph, pos, alpha=0.4)
+
+    plt.savefig('figures/allq/' + str(filename) + '_degree.png', format="PNG", dpi=600)
+
+def stopwordsStats(kcore,term_list,file):
+
+    stopword = stopwords.words('english')
+    stopword_list = [x.upper() for x in stopword]
+    print(stopword)
+    stopword_count = 0
+    stopwords_in_file = 0
+    print(len(kcore.nodes))
+    print(len(term_list))
+
+    for i in kcore.nodes:
+        #print(term_list[i])
+        if term_list[i] in stopword_list:
+            stopword_count += 1
+            #print(stopword_count)
+    for i in term_list:
+        if i in stopword_list:
+            stopwords_in_file += 1
+            #print(i)
+    print(stopword_count)
+    print(stopwords_in_file)
+    stopwords_in_file_per = float(stopword_count/stopwords_in_file)
+    stopwords_per = float(stopword_count/len(kcore.nodes))
+    #print(stopwords_per)
+    fw=open('D:/Alastor/Desktop/code_9_time/stopwords_stats.txt','a')
+    string_to_write = "File " + str(file) + " stopwords in kcore percentage : " + str(stopwords_per) + " and stopwords percentage in file: "+ str(stopwords_in_file_per) + "\n"
+    fw.write(string_to_write)
+    fw.close()
+    fw=open('D:/Alastor/Desktop/code_9_time/stopwords_kcore_stats.txt','a')
+    fw.write(str(stopwords_per))
+    fw.close()
+    fw=open('D:/Alastor/Desktop/code_9_time/stopwords_file_stats.txt','a')
+    fw.write(str(stopwords_in_file_per))
+    fw.close()
 
 
 # -----------Union Graph to inverted index-------------
@@ -351,10 +359,10 @@ def printmenu():
     print("1.create index file seperate graphs and  union graph")
     print("2.load index file and then quering \n \n")
 
-    #x = input('Insert option: ')
+    # x = input('Insert option: ')
     hargs = int(sys.argv[1])
     print(hargs)
-    S =float(sys.argv[2])
+    S = float(sys.argv[2])
     print(S)
     x = int(sys.argv[3])
     print(x)
@@ -562,55 +570,59 @@ def Woutusinggraph(inputgraph):
     print('success')
     return woutlist
 
+
 def density(A_graph):
     graph_edges = A_graph.number_of_edges()
-    #print(graph_edges)
+    # print(graph_edges)
     graph_nodes = len(list(A_graph.nodes))
-    #print(graph_nodes)
-    dens = graph_edges/(graph_nodes*(graph_nodes-1))
+    # print(graph_nodes)
+    dens = graph_edges / (graph_nodes * (graph_nodes - 1))
     return dens
-#given points A and B it caluclates the distance of a point P from the line AB
-def distance_to_line(starting_point,end_point,point):
+
+
+# given points A and B it caluclates the distance of a point P from the line AB
+def distance_to_line(starting_point, end_point, point):
     dist = -9999
-    #spoint = (x1,y1)
-    x1=starting_point[0]
-    y1=starting_point[1]
-    #end point = (x2,y2)
-    x2=end_point[0]
-    y2=end_point[1]
-    #point = (x0,y0)
+    # spoint = (x1,y1)
+    x1 = starting_point[0]
+    y1 = starting_point[1]
+    # end point = (x2,y2)
+    x2 = end_point[0]
+    y2 = end_point[1]
+    # point = (x0,y0)
     print(point)
-    x0=point[0]
-    y0=point[1]
-    dist = (abs((y2-y1)*x0 - (x2-x1)*y0 + x2*y1 - y1*x1))/(math.sqrt(((y2-y1)**2)+((x2-x1)**2)))
+    x0 = point[0]
+    y0 = point[1]
+    dist = (abs((y2 - y1) * x0 - (x2 - x1) * y0 + x2 * y1 - y1 * x1)) / (math.sqrt(((y2 - y1) ** 2) + ((x2 - x1) ** 2)))
 
     return dist
 
+
 def elbow(listofpoints):
-    #at first we need to create a line between first and last element
-    if len(listofpoints)==1:
+    # at first we need to create a line between first and last element
+    if len(listofpoints) == 1:
         bestindex = 0
-    elif len(listofpoints)==2:
-        if listofpoints[0]>listofpoints[1]:
+    elif len(listofpoints) == 2:
+        if listofpoints[0] > listofpoints[1]:
             bestindex = 0
         else:
             bestindex = 1
-    elif len(listofpoints)>2:
-        #p1 the starting point of line and p2 the last point of line
-        #using that we will calulate the distance of each point of our starting list
-        #from the line using the known forumla
-        p1 = numpy.array([listofpoints[0],0])
-        p2 = numpy.array([listofpoints[-1],(len(listofpoints)-1)])
+    elif len(listofpoints) > 2:
+        # p1 the starting point of line and p2 the last point of line
+        # using that we will calulate the distance of each point of our starting list
+        # from the line using the known forumla
+        p1 = numpy.array([listofpoints[0], 0])
+        p2 = numpy.array([listofpoints[-1], (len(listofpoints) - 1)])
         distance = []
-        #print(p1,p2)
-        #print(listofpoints)
+        # print(p1,p2)
+        # print(listofpoints)
         pnt = []
         for point in listofpoints:
             pnt.append(point)
-            pnt.append(listofpoints.index(point)+1)
+            pnt.append(listofpoints.index(point) + 1)
             print(pnt)
-            distance.append(distance_to_line(p1,p2,pnt))
-            pnt =[]
+            distance.append(distance_to_line(p1, p2, pnt))
+            pnt = []
         bestdistance = max(distance)
         bestindex = distance.index(bestdistance)
     return bestindex

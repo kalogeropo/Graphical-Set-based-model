@@ -11,6 +11,7 @@ translator = str.maketrans('', '', string.punctuation)
 # parsing a file to an inverted index and return a list of unique terms and term frequency
 
 from k_core_modules import * #helper functs
+from graph_creation_scripts import *
 
 
 
@@ -52,17 +53,18 @@ def uniongraph(terms, term_freq, adjmatrix, collection_terms, union_graph_termli
             collection_term_freq[index] += term_freq[i] * (term_freq[i] + 1) * 0.5*h
         for j in range(len(adjmatrix)):
             if i > j:
-                if terms[j] not in collection_terms:
-                    collection_terms[terms[j]] = id
-                    union_graph_termlist_id.append(id)
-                    collection_term_freq.append(term_freq[j] * (term_freq[j] + 1) * 0.5*h)
-                    union_gr.add_node(terms[i], id=id)
-                    id += 1
-                # print('kcorbool = %s and h = %d '%(str(kcorebool),h ))
-                if not union_gr.has_edge(terms[i], terms[j]):
-                    union_gr.add_edge(terms[i], terms[j], weight=adjmatrix[i][j] * h)
-                elif union_gr.has_edge(terms[i], terms[j]):
-                    union_gr[terms[i]][terms[j]]['weight'] += adjmatrix[i][j] * h
+                if adjmatrix[i][j]!=0:
+                    if terms[j] not in collection_terms:
+                        collection_terms[terms[j]] = id
+                        union_graph_termlist_id.append(id)
+                        collection_term_freq.append(term_freq[j] * (term_freq[j] + 1) * 0.5*h)
+                        union_gr.add_node(terms[i], id=id)
+                        id += 1
+                    # print('kcorbool = %s and h = %d '%(str(kcorebool),h ))
+                    if not union_gr.has_edge(terms[i], terms[j]):
+                        union_gr.add_edge(terms[i], terms[j], weight=adjmatrix[i][j] * h)
+                    elif union_gr.has_edge(terms[i], terms[j]):
+                        union_gr[terms[i]][terms[j]]['weight'] += adjmatrix[i][j] * h
 
     return terms, adjmatrix, collection_terms, union_graph_termlist_id, union_gr, id, collection_term_freq
 
@@ -250,6 +252,7 @@ if menu == 1:
         term_freq = gr[3]
         maincore = gr[4]
         prunedadjm = gr[5]
+        print(prunedadjm)
 
         try:
             ug = uniongraph(terms, term_freq, adjmatrix, collection_terms, union_graph_termlist_id, union_graph, id,
@@ -285,7 +288,7 @@ if menu == 1:
 
     # print(union_graph_termlist_id)
     # print(collection_terms)
-    # graphToPng(union_graph)
+    #graphToPng(union_graph)
     # graphToPng(gr)
     # print(Umatrix)
     # Wout : we will calculate it using the sum of weights on the graph edges on the fly
@@ -588,7 +591,7 @@ elif menu == 2:
         plt.grid()
 
         #plt.show()
-        plt.savefig('figures/allq/'+str(Query)+'.png')
+        #plt.savefig('figures/allq/'+str(Query)+'.png')
         plt.close('all')
     print('Av_Precision = ',av_precision)
     print('Av_Recall = ',av_recall)
@@ -644,8 +647,8 @@ elif menu == 2:
         df = pd.DataFrame.from_dict({"set based":av_precision,"doukas":av_precision_gsb,"maincore":av_precision_gsb_mc,
                                      "density":av_precision_gsb_dens,"CoreRank":av_precision_gsb_coreRank,"Gsb-set":setMdouk
                                      ,"main-set":setMmain,"dens-set":setMdens,"Corerank-set":setMcr})
-        writer = pd.ExcelWriter("C:/Users/nrkal/PycharmProjects/Graphical-Set-based-model/new_res.xlsx" , engine="openpyxl" , mode="a")
-        writer.book = load_workbook("C:/Users/nrkal/PycharmProjects/Graphical-Set-based-model/new_res.xlsx" )
+        writer = pd.ExcelWriter("C:/Users/nrk_pavilion/PycharmProjects/Graphical-Set-based-model/new_res.xlsx" , engine="openpyxl" , mode="a")
+        writer.book = load_workbook("C:/Users/nrk_pavilion/PycharmProjects/Graphical-Set-based-model/new_res.xlsx" )
         df.to_excel(writer,header=True)
         writer.save()
         writer.close()
