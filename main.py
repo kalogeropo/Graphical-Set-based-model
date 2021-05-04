@@ -1,4 +1,5 @@
 import os
+import sys
 
 import time
 
@@ -245,53 +246,74 @@ print(menu)
 S = menu[2]
 hargs=menu[1]
 menu = menu[0]
-if len(sys.argv)== 6:
+if len(sys.argv)<= 8 and len(sys.argv)>=5:
     X = sys.argv[4]
-elif len(sys.argv)!=5:
-    print("some error here")
+elif len(sys.argv)!=8:
+    print(len(sys.argv))
     exit(-99)
-
-
+###################
 
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!if menu==1 implement
 if menu == 1:
-# X = input(' 1.create index using maincore \n 2.create index without considering maincore \n 3.Create index using Density method \n 4.Create index using CoreRank method\n' )
+    #X = input(' 1.create index using maincore \n 2.create index without considering maincore \n 3.Create index using Density method \n 4.Create index using CoreRank method\n' )
     if int(X) == 1:
         corebool = True
-        window_size = 20
-        splitfiles = False
+        splitfiles = True
+        sen_par_flag = False
+        window_size = 9
+        par_window_size = 0
         invfilename = 'newfile.dat'
     elif int(X) == 2:
         corebool = False
-        window_size = 20
-        splitfiles = False
+        splitfiles = True
+        sen_par_flag = False
+        window_size = 9
+        par_window_size = 0
         invfilename = 'invertedindex.dat'
     elif int(X) == 3:
         corebool = True
-        window_size = 20
-        splitfiles = False
+        splitfiles = True
+        sen_par_flag = False
+        window_size = 9
+        par_window_size = 0
         invfilename = 'densfile.dat'
     elif int(X) == 4:
         corebool = True
-        window_size = 20
-        splitfiles = False
+        splitfiles = True
+        sen_par_flag = False
+        window_size = 9
+        par_window_size = 0
         invfilename = 'CoreRankfile.dat'
-        ########TEST##############
+    ########TEST##############
     elif int(X) == 5:
         splitfiles = True
-        window_size = int(sys.argv[5])
+        sen_par_flag = False
         corebool = False
+        par_window_size = 9
+        if  len(sys.argv) <6:
+            window_size = 9
+        else:
+            window_size = int(sys.argv[5])
         invfilename = 'ConstantWindFile.dat'
+    elif int(X) == 6:
+        sen_par_flag = True
+        splitfiles = False
+        corebool = False
+        window_size = 9
+        par_window_size = int(sys.argv[6])
+        invfilename = 'SenParConWind.dat'
         ##########################
 
-        un_start = time.time()
-        start = time.time()
-        remaining = len(os.listdir('txtfiles')) + 1
+    un_start = time.time()
+    start = time.time()
+    remaining = len(os.listdir('txtfiles')) + 1
 
+    for name in file_list:
+        remaining -= 1
         print(remaining)
         name = name[0]
         # print("=========================For file = %s==================== " % name)
-        gr = runIt(name, int(X))
+        gr = runIt(name, int(X),splitfiles,window_size)
         # write doc info to file
         adjmatrix = gr[0]
         terms = gr[1]
