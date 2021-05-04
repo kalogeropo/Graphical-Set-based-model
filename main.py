@@ -246,9 +246,11 @@ print(menu)
 S = menu[2]
 hargs=menu[1]
 menu = menu[0]
+
+##----------> possible issue creator :P  DONT LIKE THIS POINT OF CODE MUCH
 if len(sys.argv)<= 8 and len(sys.argv)>=5:
     X = sys.argv[4]
-elif len(sys.argv)!=8:
+elif len(sys.argv)>8:
     print(len(sys.argv))
     exit(-99)
 ###################
@@ -500,7 +502,7 @@ elif menu == 2:
         simple_set_based = q_D_similarities(query, documentmatrix, docs)
         sorted_simple_set_based = sorted(simple_set_based, key=itemgetter(1), reverse=True)
 
-        print(len(sorted_simple_set_based))
+        #print(len(sorted_simple_set_based))
 
         # set based with doukas change on the weights:
         documentmatrix = doc_rep(doc_vectors, idf_vec, W_vec)
@@ -536,8 +538,8 @@ elif menu == 2:
                 return pre[:k-1]
             except:
                 return None
-        print(relevant)
-        print(list0)
+        #print(relevant)
+        #print(list0)
 
         cnt = 0
         retrieved = 1
@@ -552,13 +554,13 @@ elif menu == 2:
                 recall.append(r)
             retrieved += 1
 
-        print(list0)
-        print(precision[0:10])
-        print(recall[0:10])
+        #print(list0)
+        #print(precision[0:10])
+        #print(recall[0:10])
         av_precision.append(average(precision))
         av_recall.append(average(recall))
 
-        print("****************list0******************")
+        #print("****************list0******************")
         list1 = [x[0].replace('txtfiles\\', '') for x, y in sorted_graphextention_set_based]
 
         cnt = 0
@@ -573,13 +575,13 @@ elif menu == 2:
                 precision_gsb.append(p)
                 recall_gsb.append(r)
             retrieved += 1
-        print(list1)
-        print(precision_gsb[0:10])
-        print(recall_gsb[0:10])
+        #print(list1)
+        #print(precision_gsb[0:10])
+        #print(recall_gsb[0:10])
         av_precision_gsb.append(average(precision_gsb))
         av_recall_gsb.append(average(recall_gsb))
 
-        print("****************list1******************")
+        #print("****************list1******************")
         list2 = [x[0].replace('txtfiles\\', '') for x, y in sorted_graphextention_set_based_using_main_core]
 
         cnt = 0
@@ -595,12 +597,12 @@ elif menu == 2:
                 recall_gsb_mc.append(r)
             retrieved += 1
 
-        print(list2)
-        print(precision_gsb_mc[0:10])
-        print(recall_gsb_mc[0:10])
+        #print(list2)
+        #print(precision_gsb_mc[0:10])
+        #print(recall_gsb_mc[0:10])
         av_recall_gsb_mc.append(average(recall_gsb_mc))
         av_precision_gsb_mc.append(average(precision_gsb_mc))
-        print("****************list3******************")
+        #print("****************list3******************")
         list3 = [x[0].replace('txtfiles\\', '') for x, y in sorted_graphextention_set_based_using_dens]
 
         cnt = 0
@@ -616,13 +618,13 @@ elif menu == 2:
                 recall_gsb_dens.append(r)
             retrieved += 1
 
-        print(list2)
-        print(precision_gsb_mc[0:10])
-        print(recall_gsb_mc[0:10])
+        #print(list2)
+        #print(precision_gsb_mc[0:10])
+        #print(recall_gsb_mc[0:10])
 
         av_recall_gsb_dens.append(average(recall_gsb_dens))
         av_precision_gsb_dens.append(average(precision_gsb_dens))
-        print("****************list3******************")
+        #print("****************list3******************")
         list4 = [x[0].replace('txtfiles\\', '') for x, y in sorted_graphextention_set_based_using_coreRank]
 
         cnt = 0
@@ -639,7 +641,7 @@ elif menu == 2:
             retrieved += 1
         av_recall_gsb_coreRank.append(average(recall_gsb_coreRank))
         av_precision_gsb_coreRank.append(average(precision_gsb_coreRank))
-        print("****************list4******************")
+        #print("****************list4******************")
 
         k=5
 

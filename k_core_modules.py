@@ -313,7 +313,7 @@ def apriori(l1, minfreq):
     final_list.append(l1)
     k = 2
     l = l1
-    print('=========Generating frequent sets ============')
+    #print('=========Generating frequent sets ============')
     while (l != []):
         c = apriori_gen(l)
         l = apriori_prune(c, minfreq)
@@ -505,7 +505,7 @@ def fij_calculation(docinfo, final_list, plist, trms):
 
 
 def calculate_idf(termsetsL, numofdocs):
-    print('=====calculating idfs============')
+    #print('=====calculating idfs============')
     idf_vector = []
     for ts in termsetsL:  # iterate based on the number of terms in termset
         for item in ts:  # iterate all termsets with the same number of terms in set
@@ -522,7 +522,7 @@ def calculate_idf(termsetsL, numofdocs):
 
 # doukas weight
 def calculate_termset_W(termsetsL, W, terms):
-    print("=======Calculating W as stated in Doukas- Makris ======")
+    #print("=======Calculating W ======")
     termset_W_vector = []
     for ts in termsetsL:  # iterate based on the number of terms in termset
         for item in ts:  # iterate all termsets with the same number of terms in set
