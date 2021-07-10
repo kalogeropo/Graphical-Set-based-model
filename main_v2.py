@@ -10,8 +10,8 @@ from openpyxl import load_workbook
 translator = str.maketrans('', '', string.punctuation)
 # parsing a file to an inverted index and return a list of unique terms and term frequency
 
-from k_core_modules_v2 import * #helper functs
-
+from k_core_modules import * #helper functs
+from graph_creation_scripts import *
 
 
 # deletes by re drawing the graph edges of the graph given a minimum weight !needs fix but dont work
@@ -545,7 +545,7 @@ elif menu == 2:
         #print(relevant)
         #print(list0)
 
-        print("****************list0******************")
+        #print("****************list0******************")
 
         cnt = 0
         retrieved = 1
@@ -566,7 +566,7 @@ elif menu == 2:
         av_precision.append(average(precision))
         av_recall.append(average(recall))
 
-        print("****************list1******************")
+        #print("****************list1******************")
 
         list1 = [x[0].replace('txtfiles\\', '') for x, y in sorted_graphextention_set_based]
 
@@ -588,7 +588,7 @@ elif menu == 2:
         av_precision_gsb.append(average(precision_gsb))
         av_recall_gsb.append(average(recall_gsb))
 
-        print("****************list2******************")
+        #print("****************list2******************")
         list2 = [x[0].replace('txtfiles\\', '') for x, y in sorted_graphextention_set_based_using_main_core]
 
         cnt = 0
@@ -609,7 +609,7 @@ elif menu == 2:
         #print(recall_gsb_mc[0:10])
         av_recall_gsb_mc.append(average(recall_gsb_mc))
         av_precision_gsb_mc.append(average(precision_gsb_mc))
-        print("****************list3******************")
+        #print("****************list3******************")
         list3 = [x[0].replace('txtfiles\\', '') for x, y in sorted_graphextention_set_based_using_dens]
 
         cnt = 0
@@ -631,7 +631,7 @@ elif menu == 2:
 
         av_recall_gsb_dens.append(average(recall_gsb_dens))
         av_precision_gsb_dens.append(average(precision_gsb_dens))
-        print("****************list3******************")
+        #print("****************list3******************")
         list4 = [x[0].replace('txtfiles\\', '') for x, y in sorted_graphextention_set_based_using_coreRank]
 
         cnt = 0
@@ -648,7 +648,7 @@ elif menu == 2:
             retrieved += 1
         av_recall_gsb_coreRank.append(average(recall_gsb_coreRank))
         av_precision_gsb_coreRank.append(average(precision_gsb_coreRank))
-        print("****************list4******************")
+        #print("****************list4******************")
         
         
         ############TEST########################
@@ -668,7 +668,7 @@ elif menu == 2:
             retrieved += 1
         av_recall_constant.append(average(recall_constant_window))
         av_precision_constant.append(average(precision_constant_window))
-        print("****************list5******************")
+        #print("****************list5******************")
         #################################################
 
         k=5
