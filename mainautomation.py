@@ -71,7 +71,8 @@ def PrepareForNextRound(counter,test_str):
 
     workbook = xlsxwriter.Workbook('new_res.xlsx')
     workbook.close()
-    return 0
+    print("Copy paste your PARSED collection in TXTFILES and start over")
+    exit(0)
 
 
 counter = 0
