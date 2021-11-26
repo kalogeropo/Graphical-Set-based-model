@@ -142,21 +142,56 @@ def runIt(filename, ans,window_flag, window_size, sen_par_flag, par_window_size,
     kcore = nx.Graph()
     kcore_nodes = []
     prunedadjm = nx.to_numpy_array(kcore)
+    #	corebool --> not used(Can change to apply union graph penalty or not)
+    #	splitfiles --> Window based splitting methods will be used if true(Exists because we use GSB in our experiments which doesnt require splitting)
+    #	sen_par_flag --> if true sentence paragraph method will be used
+    #	dot_split --> if true we will split according to "." using nltk's tokenize with punkt
+    #	window_size --> The size of window when we are splitting using constant windows. If it is equal to 0
+    #			per_window will be used instead.(per_window is the percentage of the text we will use)
+    #	per_window --> A number between 0-1. 0 is 0% of the text while 1 is 100%. It is used to calculate the
+    #			window size when using file length percentage based splitting.
+    #	par_window_size --> Only used when sen_par_flag is true. It is the window size that corresponds to the paragraph level
+    #	invfilename --> filename of the inverted index that will be constructed.
+    #
+    # Flag Hierarchy:
+    #
+    #	splitfiles >> sen_par_flag >> dot_split >> corebool(doesnt do anyting yet)
+    #
+    #	if splitfiles is false then we use gsb
+    #
+    #	if sen_par_flag is true we use sentence/paragraph splitting
+    #		if dot_split is true the sentence portion of the adjmatrix will be split according to "."
+    #		if dot split is false the file will be split according to window size(the sentence part only)
+    #			if window size is 0 then the sentence portion of the adjmatrix will be generated according to percentage of the file(based on per_window)
+    #			if window size is a positive integer the sentence portion of the adjmatrix will be generated according to that integer(constant window splitting)
+    #		For the paragraph part we will be using constant window splitting according to par_window_size.(always)
+    #	if sen_par_flag is false then we use regular splitting accoding to the rest of the flags/values
+    #		if dot_split is true then we use splitting according to "." using nltk and punkt
+    #		if dot split is false the file will be split according to window size
+    #			if window size is 0 then the file will be split according to percentage of the file(based on per_window)
+    #			if window size is a positive integer the file will be split according to that integer(constant window splitting)
+    #
+    #
+    #
+    # With current flags:
+    #
+    #	X=1 --> penalty on union graph splitting using percentages
+    #	X=2 --> GSB
+    #	X=3 --> penalty on union graph splitting using percentages
+    #	X=4 --> penalty on union graph splitting using "." ISSUE:IF nltk is not installed, BY PASS: At menu 2: input one of existing indexes
+    #	X=5 --> penalty on union graph splitting using constant window size
+    #	X=6 --> penalty on union graph splitting using sentence/paragraph windows
+    #
+    #   !This is where we add methods to improve the graph such as core/truss decomposition, pruning, methods for important nodes. !
+
+    #   NOTE: this main uses penalty on union graph (see lines 65,70,77 - uniongraph function) to punish frequent edges.
     if ans == 1:
 
         # By creating new graph we can translate it easily to the respective adj matrix
         # without calculating each edge weight separtly. It returns a pruned GRAPH
-
-        prunedgr = gr#pruneGraphbyWeight(adjmat,temp[0])
-        if not nx.is_empty(prunedgr):
-            kcore = k_core(prunedgr)
-            kcore_nodes = kcore.nodes
-            prunedadjm = nx.to_numpy_array(prunedgr, weight='weight')
-        else:
-            kcore = nx.Graph()
-            kcore_nodes = kcore.nodes
-            prunedadjm = adjmat
-            docs_without_main_core.append(filename)
+        print("Calculating without maincore:")
+        prunedadjm = adjmat
+        kcore_nodes = []
         #stopwordsStats(kcore,temp[0],filename)
         #print(nx.number_of_nodes(kcore))
         #print(len(kcore))
@@ -288,10 +323,7 @@ if menu == 1:
         corebool = False
         dot_split = False
         par_window_size = 0
-        if  len(sys.argv) <6:
-            window_size = 0
-        else:
-            window_size = int(sys.argv[5])
+        window_size = int(sys.argv[5])
         per_window = 0
         invfilename = 'ConstantWindFile.dat'
     elif int(X) == 6:
@@ -377,11 +409,6 @@ if menu == 1:
 
     writetime = time.time()
     wout = Woutusinggraph(union_graph)
-
-    # print(wout)
-    # deg = Woutdegree(m)
-    # print(len(deg[0]))
-    # w_and_write_to_file(deg,Umatrix,collection_terms,union_graph_termlist_id,collection_term_freq) #todo: calc the Win and Wout on the fly cause of memory issues on large scale
 
     w_and_write_to_filev2(wout, collection_terms, union_graph_termlist_id, collection_term_freq, postinglist,
                           file=invfilename)
