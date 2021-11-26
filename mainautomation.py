@@ -8,6 +8,7 @@ os.system('python main.py 700 0.2 1 1 3 200 0.091') would result in an error bec
 
 #creates the initial structure of the model
 core_path = "C:/Users/nrk_pavilion/PycharmProjects/Graphical-Set-based-model"
+
 def init_function(test_path):
     #create txtfiles: the collection storage directory
     temp = [test_path, "/txtfiles"]
@@ -81,16 +82,18 @@ counter = 0
 #sys.args[5] = constant window size, sys.args[6] = paragraph size - sys.args[7] = percentage window.
 #example:  main_v2.py 700 0.2 1 1 3 200 0.091')
 
-os.system('python main_v2.py 700 0.2 1 1 3 200 0.091')
-os.system('python main_v2.py 700 0.2 1 2 3 200 0.091')
-os.system('python main_v2.py 700 0.2 1 3 0 200 0.091')
-os.system('python main_v2.py 700 0.2 1 4 3 200 0.091')
-os.system('python main_v2.py 700 0.2 1 5 3 200 0.091')
+os.system('python main_v3.py 700 0.2 1 1 20 200 0.091')
+os.system('python main_v3.py 700 0.2 1 2 50 200 0.091')
+os.system('python main_v3.py 700 0.2 1 3 0 200 0.091')
+os.system('python main_v3.py 700 0.2 1 4 3 200 0.091')
+os.system('python main_v3.py 700 0.2 1 5 3 200 0.091')
+os.system('python main_v3.py 700 0.2 1 6 3 200 0.091')
 
-os.system('python main_v2.py 700 0.2 2')
+
+os.system('python main_v3.py 700 0.2 2')
 
 #name for file in figures directory
-testname = "700 0.2 1 1 3 200 0.091"
+testname = "test2"
 
 
 PrepareForNextRound(counter,testname)

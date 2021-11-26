@@ -80,7 +80,6 @@ for file in os.listdir(path):
                     #print(sline)
                     line =  fd.readline()
                     sline=line.split()
-
                 # handling AU multilined
                 if len(sline)>0 and sline[0]=="AU":
                     #print(sline)
@@ -159,7 +158,6 @@ for file in os.listdir(path):
                     line = fd.readline(500)
                     sline = line.split()
                 List_to_write(filename,title,abstract)
-
             else:
                 count+=1
                 text = fd.readline()

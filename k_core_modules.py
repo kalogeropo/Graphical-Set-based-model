@@ -197,7 +197,7 @@ def plot_degree_dist(graph, *args, **kwargs):
     nx.draw_networkx_edges(graph, pos, alpha=0.4)
 
     plt.savefig('figures/allq/' + str(filename) + '_degree.png', format="PNG", dpi=600)
-
+#TODO: paths
 def stopwordsStats(kcore,term_list,file):
 
     stopword = stopwords.words('english')
@@ -332,6 +332,7 @@ def apriori_gen(itemset):
     texts = []
     length = len(itemset)
     for i in range(length):
+        #[[leksi,emfanisi],[.... , ...],[... , ....]]
         ele = itemset[i][0]
         for j in range(i + 1, length):
             ele1 = itemset[j][0]
@@ -491,10 +492,10 @@ def fij_calculation(docinfo, final_list, plist, trms):
                     test.append(sum)
                 else:
                     test.append(0)
-        if len(test) == 1213:
-            print(len(test))
-            print('problem')
-            exit(-2)
+        #if len(test) == 1213:
+        #    print(len(test))
+        #    print('problem')
+        #    exit(-2)
         doc_vectors.append(test)
     with open('debuglog.dat', 'a') as fd:
         fd.write('doc vectors \n')
