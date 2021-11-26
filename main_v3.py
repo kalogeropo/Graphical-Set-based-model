@@ -892,42 +892,5 @@ elif menu == 2:
         writer.close()
 
 
-        # Todo :2. fine tune prune function to be consistent (DONE: USING THE MIN-MAX PRECENTAGE thus it will work on the whole collection but its too aggresive on nodes)
-        # Todo :using a path implementation seems more effective ------> tring and avarege of degrees
-        # Todo :3. (DONE) Unite graphs on  U graph (DONE)
-        # todo :4. (DONE) GSB
-        #  weights (DONE)
-        # Todo :5. Implement set based model-Quering
-        # Todo :(DONE)posting lists for terms - indexing as inverted index (DONE)
-        # TODO :(DONE)Write to file so loading from file is implemented for quering (DONE)
-        # TODO :(DONE)termsets(DONE)
-        # TODO :(DONE)termset weights 1.simple setbased model 2.GSB
-        #  changes on setbasedmodel 3.my changes on GSB
-        #  using k-core
-        # TODO :(DONE) calculate idf ,
-        # TODO :(DONE) termset weight product
-        # TODO :(DONE) combine the above
-        # TODO :(DONE) COSINE SIM (doc,Q)
-        # TODO :(DONE) do the above in functions and implment menu
-        # TODO :(DONE)SORT Results
-        # TODO :(DONE)create union graph considering the main core.
-        # Todo :6. time functions - > better representation
-        # QUALITY TODO :7. (DONE) plot the graphs and save them in a tidy manner  (DONE WHEN IT WAS POSSIBLE) [possible bug on union graph plot on max scale]
-        # QUALITY TODO :8.  better plots, result ploting, clean up src
-
-        # PERFROMANCE TODO :A. USE DICT TO TEST MEMBERSHIP(DONE)  B. PROFILE FUNCTIONS TO SEE WHERE THE PREFORMANCE IS SLOW(DONE AND FIXED) C. CATCH MEMORY ERRORS SAVE UNIONGRPH AND IMPLEMENT
-        #                   MECHANISM TO CREATE PARTIALLY THE INV INDEX(?)
-
-        #TODO: **************SOS*********************************
-        #TODO: SOS check how do we perform in large,medium,small Qs meaning queries with lots,medium number,small number of relevant docs
-
-        #TODO: find the best parameters for pruning the complete graph . Starting: @+30%, +20%,+10%, -10%, -20%, -30%, and compare the results
-
-        #TODO:V2: -> stopwords, stop preproccess if texts is already proccessed done
-        #TODO:V2: -> method menu done
-        #TODO:V2: -> density method done
-        #TODO:V2: -> elbow method done
-        #TODO:V2: -> inf method done
-        #TODO:V2: -> core Rank method done
-        #TODO:V2: -> script the proccess ------
-        #Todo V2: -> k trusses
+        #TODO: SPLIT ON MEANINGFULL MODULES
+        #TODO: COREBOOL FOR ENABLING PENALTY
