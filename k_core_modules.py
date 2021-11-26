@@ -20,11 +20,11 @@ from operator import itemgetter
 from networkx import core_number, k_core
 import csv
 
-# buggy na xrisimopoii8ei i proepeksergasia pou exei dimiourgi8ei san ksexwristo .py
 postinglist = []
 docinfo = []
 docs_without_main_core = []
 
+# buggy na xrisimopoii8ei i proepeksergasia pou exei dimiourgi8ei san ksexwristo .py
 
 def preproccess(file):
     with open(file, 'r') as fd:
@@ -222,14 +222,14 @@ def stopwordsStats(kcore,term_list,file):
     stopwords_in_file_per = float(stopword_count/stopwords_in_file)
     stopwords_per = float(stopword_count/len(kcore.nodes))
     #print(stopwords_per)
-    fw=open('D:/Alastor/Desktop/code_9_time/stopwords_stats.txt','a')
+    fw=open('stopwords_stats.txt','a')
     string_to_write = "File " + str(file) + " stopwords in kcore percentage : " + str(stopwords_per) + " and stopwords percentage in file: "+ str(stopwords_in_file_per) + "\n"
     fw.write(string_to_write)
     fw.close()
-    fw=open('D:/Alastor/Desktop/code_9_time/stopwords_kcore_stats.txt','a')
+    fw=open('stopwords_kcore_stats.txt','a')
     fw.write(str(stopwords_per))
     fw.close()
-    fw=open('D:/Alastor/Desktop/code_9_time/stopwords_file_stats.txt','a')
+    fw=open('stopwords_file_stats.txt','a')
     fw.write(str(stopwords_in_file_per))
     fw.close()
 
@@ -246,8 +246,6 @@ def graphToIndex(id, terms, calc_term_w, plist, *args, **kwargs):
     f.close()
     return 1
 
-
-# creating Rational path Graph - Union Graph
 
 
 # calculating the weight and write the inverted index file using graphToIndex method
