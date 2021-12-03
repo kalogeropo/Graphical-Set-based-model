@@ -8,6 +8,12 @@ os.system('python main.py 700 0.2 1 1 3 200 0.091') would result in an error bec
 
 #creates the initial structure of the model
 core_path = "C:/Users/nrk_pavilion/PycharmProjects/Graphical-Set-based-model"
+print(core_path)
+
+core_path = os.getcwd()
+
+print(core_path)
+#exit(10)
 
 def init_function(test_path):
     #create txtfiles: the collection storage directory
@@ -59,7 +65,7 @@ def PrepareForNextRound(counter,test_str):
     targets = ["DotSplit.dat","NegMain.dat","invertedindex.dat","PerSplit.dat",
                "docinfo.dat","ConstantWindFile.dat","SenParConWind.dat",
                 "densfile.dat","newfile.dat","debuglog.dat","invertedindex.dat","CoreRankfile.dat","new_res.xlsx"]
-    for file in os.listdir("C:/Users/nrk_pavilion/PycharmProjects/Graphical-Set-based-model"):
+    for file in os.listdir(core_path):
         if file in targets:
             try:
                 shutil.copy2(file, dirpath)
@@ -82,18 +88,18 @@ counter = 0
 #sys.args[5] = constant window size, sys.args[6] = paragraph size - sys.args[7] = percentage window.
 #example:  main_v2.py 700 0.2 1 1 3 200 0.091')
 
-os.system('python main_v3.py 700 0.2 1 1 20 200 0.091')
-os.system('python main_v3.py 700 0.2 1 2 50 200 0.091')
-os.system('python main_v3.py 700 0.2 1 3 0 200 0.091')
-os.system('python main_v3.py 700 0.2 1 4 3 200 0.091')
-os.system('python main_v3.py 700 0.2 1 5 3 200 0.091')
-os.system('python main_v3.py 700 0.2 1 6 3 200 0.091')
+#os.system('python main_v3.py 700 0.2 1 1 20 200 0.091')
+#os.system('python main_v3.py 700 0.2 1 2 50 200 0.091')
+#os.system('python main_v3.py 700 0.2 1 3 0 200 0.091')
+#os.system('python main_v3.py 700 0.2 1 4 3 200 0.091')
+#os.system('python main_v3.py 700 0.2 1 5 3 200 0.091')
+#os.system('python main_v3.py 700 0.2 1 6 3 200 0.091')
 
 
 os.system('python main_v3.py 700 0.2 2')
 
 #name for file in figures directory
-testname = "test2"
+testname = "test3"
 
 
 PrepareForNextRound(counter,testname)

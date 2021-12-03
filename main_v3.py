@@ -522,7 +522,7 @@ elif menu == 2:
         Q = list(set(Q))  # to ignore duplicate words as queries
         numOfTermsets = (2 ** (len(Q))) - 1
         # print(numOfTermsets)
-        minfreq = 1  # value of min frequency of a termset depends on the collection todo:
+        minfreq = 0  # value of min frequency of a termset depends on the collection todo:
 
         # GENERATE  TERMSETS
         One_termsets = one_termsets(Q, trms, plist, minfreq)
@@ -621,7 +621,7 @@ elif menu == 2:
                 return pre[:k-1]
             except:
                 return None
-        print(relevant)
+        #print(relevant)
         #print(list0)
 
         cnt = 0
@@ -790,7 +790,7 @@ elif menu == 2:
         plt.grid()
 
         #plt.show()
-        plt.savefig('figures/allq/'+str(Query)+'.png')
+        #plt.savefig('figures/allq/'+str(Query)+'.png')
         plt.close('all')
     print('Av_Precision = ',av_precision)
     print('Av_Recall = ',av_recall)
