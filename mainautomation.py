@@ -93,7 +93,7 @@ os.system('python main_v3.py 700 0.2 1 6 3 200 0.091')
 os.system('python main_v3.py 700 0.2 2')
 
 #name for file in figures directory
-testname = "test2"
+testname = "test9"
 
 
 PrepareForNextRound(counter,testname)

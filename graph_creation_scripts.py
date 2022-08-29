@@ -138,7 +138,7 @@ def createInvertedIndexFromFile(file, postingl):
                 existingtermindex = postingl.index(term)
                 if file not in postingl[existingtermindex + 1]:
                     postingl[existingtermindex + 1].extend([file, text.count(term)])
-    # print(len(uninque_terms))
+    # print(len(uninque_terms)) [oros , ari8mois emfanisis]
     # print(termFreq)
     return (uninque_terms, termFreq, postingl, len(text))
 

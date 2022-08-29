@@ -231,8 +231,8 @@ def runIt(filename, ans,window_flag, window_size, sen_par_flag, par_window_size,
 print('===========Preproccess==========\n')
 start = time.time()
 file_list = []
-for item in os.listdir('txtfiles'):
-    name = os.path.join("txtfiles", item)
+for item in os.listdir('test_txts'):
+    name = os.path.join("test_txts", item)
     # print(os.path.getsize(name))
     if os.path.getsize(name) == 0:
         print('%s is empty:' % name)
@@ -339,7 +339,7 @@ if menu == 1:
     
     un_start = time.time()
     start = time.time()
-    remaining = len(os.listdir('txtfiles')) + 1
+    remaining = len(os.listdir('test_txts')) + 1
 
     for name in file_list:
         remaining -= 1
@@ -357,7 +357,7 @@ if menu == 1:
         prunedadjm = gr[5]
         file_sum_mat = gr[6]
         #getGraphStats(graph,name,True, True)
-		
+
         try:
             ug = uniongraph(terms, term_freq, adjmatrix, collection_terms, union_graph_termlist_id, union_graph, id,
                             collection_term_freq, maincore, kcorebool=corebool)
@@ -416,6 +416,7 @@ if menu == 1:
     print('**********************\n*creating  inverted index  in %f MINS \n***********************' % (
                 (endwritetime - writetime) / 60))
     print('docs completely pruned %s'%str(docs_without_main_core))
+#====>
 elif menu == 2:
     # read files
     try:
@@ -515,20 +516,24 @@ elif menu == 2:
     for Query in Qtest:
         # Queries
         Q = Query
+        #######===>
+        #Q = "term1 term20 term2"
         # Q = input('Input Query : ')
         #print('Query ======== ',Q)
         Q = Q.upper()
         Q = Q.split()
         Q = list(set(Q))  # to ignore duplicate words as queries
+
         numOfTermsets = (2 ** (len(Q))) - 1
         # print(numOfTermsets)
-        minfreq = 1  # value of min frequency of a termset depends on the collection todo:
+        minfreq = 0  # value of min frequency of a termset depends on the collection todo:
 
         # GENERATE  TERMSETS
         One_termsets = one_termsets(Q, trms, plist, minfreq)
         #print(One_termsets)
         l1 = One_termsets
         final_list = apriori(l1, minfreq)
+        print(final_list)
         #print('==Finished Generating the Frequent Sets==')
 
         # i domi tis final list einai [1-termsets][2-termsets].....[n-termsets]
@@ -609,13 +614,15 @@ elif menu == 2:
                                                             key=itemgetter(1), reverse=True)
         #####################################################
 
+
+        break
         relevant = ALLrelevant[Qtest.index(Query)]
         #print('Query = ', Q)
         #print('relevant= ',relevant)
         #print("****************END******************")
         relevant = [item.zfill(5) for item in relevant]
         #print(relevant)
-        list0 = [x[0].replace('txtfiles\\', '') for x, y in sorted_simple_set_based]
+        list0 = [x[0].replace('test_txts\\', '') for x, y in sorted_simple_set_based]
         def precision_at_k(k,pre):
             try:
                 return pre[:k-1]
@@ -644,7 +651,7 @@ elif menu == 2:
         av_recall.append(average(recall))
 
         #print("****************list0******************")
-        list1 = [x[0].replace('txtfiles\\', '') for x, y in sorted_graphextention_set_based]
+        list1 = [x[0].replace('test_txts\\', '') for x, y in sorted_graphextention_set_based]
 
         cnt = 0
         retrieved = 1
@@ -665,7 +672,7 @@ elif menu == 2:
         av_recall_gsb.append(average(recall_gsb))
 
         #print("****************list1******************")
-        list2 = [x[0].replace('txtfiles\\', '') for x, y in sorted_graphextention_set_based_using_main_core]
+        list2 = [x[0].replace('test_txts\\', '') for x, y in sorted_graphextention_set_based_using_main_core]
 
         cnt = 0
         retrieved = 1
@@ -686,7 +693,7 @@ elif menu == 2:
         av_recall_gsb_mc.append(average(recall_gsb_mc))
         av_precision_gsb_mc.append(average(precision_gsb_mc))
         #print("****************list3******************")
-        list3 = [x[0].replace('txtfiles\\', '') for x, y in sorted_graphextention_set_based_using_dens]
+        list3 = [x[0].replace('test_txts\\', '') for x, y in sorted_graphextention_set_based_using_dens]
 
         cnt = 0
         retrieved = 1

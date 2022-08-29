@@ -457,15 +457,16 @@ def fij_calculation(docinfo, final_list, plist, trms):
 
     for document in docinfo:
         # print('============doc name =============')
-        # print(document[0])
-        docs.append([document[0]])  # not needed
+        print(document[0])
+        docs.append([document[0]])
+        print(final_list)# not needed
         # k = 1
         # test is a temp list which contains the termfreq of TSets for the current doc, then we append that list to create
         # a matrix of [Docs X Termsets].
         test = []
         for itemsets in final_list:
             # print('------------------------------%d- termset is:--------------------------------'%k)
-            # print(itemsets)
+            print(itemsets)
             # k+=1
             # print(len(itemsets))
             for i in range(len(itemsets)):
@@ -478,13 +479,13 @@ def fij_calculation(docinfo, final_list, plist, trms):
                     for term in itemsets[i][0]:
                         if term in trms:
                             termindx = trms.index(term)
-                            # print(termindx)
-                            # print(ids[termindx])
-                            # print(trms[termindx])
-                            # print(plist[termindx])
+                            #print(termindx)
+                            #print(ids[termindx])
+                            #print(trms[termindx])
+                            #print(plist[termindx])
                             if document[0] in plist[termindx]:
                                 docindex = plist[termindx].index(document[0])
-                                # print('edw:%s'%plist[termindx][docindex+1])
+                                print('edw:%s'%plist[termindx][docindex+1])
                                 sum += int(plist[termindx][
                                                docindex + 1])  # to amesws epomeno stoixeio antistoixei ston ari8mo emfanisis tou orou TERM(i) sto Document(j)
                     test.append(sum)
@@ -515,7 +516,7 @@ def calculate_idf(termsetsL, numofdocs):
                 idf_vector.append(idf)
             else:
                 idf_vector.append(0)
-                print(item[1], len(item[1]))
+                #print(item[1], len(item[1]))
     return idf_vector
 
 
