@@ -72,8 +72,7 @@ def PrepareForNextRound(counter,test_str):
 
     workbook = xlsxwriter.Workbook('new_res.xlsx')
     workbook.close()
-    print("Copy paste your PARSED collection in TXTFILES and start over")
-    exit(0)
+
 
 
 counter = 0
@@ -89,11 +88,10 @@ os.system('python main_v3.py 700 0.2 1 4 3 200 0.091')
 os.system('python main_v3.py 700 0.2 1 5 3 200 0.091')
 os.system('python main_v3.py 700 0.2 1 6 3 200 0.091')
 
-
 os.system('python main_v3.py 700 0.2 2')
 
 #name for file in figures directory
-testname = "test9"
+testname = "test10"
 
 
 PrepareForNextRound(counter,testname)

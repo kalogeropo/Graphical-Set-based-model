@@ -231,8 +231,8 @@ def runIt(filename, ans,window_flag, window_size, sen_par_flag, par_window_size,
 print('===========Preproccess==========\n')
 start = time.time()
 file_list = []
-for item in os.listdir('test_txts'):
-    name = os.path.join("test_txts", item)
+for item in os.listdir('txtfiles'):
+    name = os.path.join("txtfiles", item)
     # print(os.path.getsize(name))
     if os.path.getsize(name) == 0:
         print('%s is empty:' % name)
@@ -339,7 +339,7 @@ if menu == 1:
     
     un_start = time.time()
     start = time.time()
-    remaining = len(os.listdir('test_txts')) + 1
+    remaining = len(os.listdir('txtfiles')) + 1
 
     for name in file_list:
         remaining -= 1
@@ -409,7 +409,7 @@ if menu == 1:
 
     writetime = time.time()
     wout = Woutusinggraph(union_graph)
-
+    print(postinglist)
     w_and_write_to_filev2(wout, collection_terms, union_graph_termlist_id, collection_term_freq, postinglist,
                           file=invfilename)
     endwritetime = time.time()
@@ -464,8 +464,8 @@ elif menu == 2:
     #####################
     
     # debug
-    l = [i for i, j in zip(W, W1) if i == j]
-    print(l)
+    #l = [i for i, j in zip(W, W1) if i == j]
+    #print(l)
 
     Qtest =  [' What are the effects of calcium on the physical properties of mucus from CF patients',
               ' Can one distinguish between the effects of mucus hypersecretion and infection on the submucosal glands of the respiratory tract in CF',
@@ -507,15 +507,12 @@ elif menu == 2:
     av_pre_at_k = []
     av_precision_gsb_mc_at_k = []
 
-    def average(lst):
-        try:
-            return sum(lst)/len(lst)
-        except ZeroDivisionError:
-            return 0 		
+
 
     for Query in Qtest:
         # Queries
-        Q = Query
+        Q=Query
+        #Q = "term1 term2 term20 term3 term4"
         #######===>
         #Q = "term1 term20 term2"
         # Q = input('Input Query : ')
@@ -523,7 +520,7 @@ elif menu == 2:
         Q = Q.upper()
         Q = Q.split()
         Q = list(set(Q))  # to ignore duplicate words as queries
-
+        print(Q)
         numOfTermsets = (2 ** (len(Q))) - 1
         # print(numOfTermsets)
         minfreq = 0  # value of min frequency of a termset depends on the collection todo:
@@ -533,7 +530,7 @@ elif menu == 2:
         #print(One_termsets)
         l1 = One_termsets
         final_list = apriori(l1, minfreq)
-        print(final_list)
+        #print(final_list)
         #print('==Finished Generating the Frequent Sets==')
 
         # i domi tis final list einai [1-termsets][2-termsets].....[n-termsets]
@@ -615,190 +612,79 @@ elif menu == 2:
         #####################################################
 
 
-        break
         relevant = ALLrelevant[Qtest.index(Query)]
         #print('Query = ', Q)
         #print('relevant= ',relevant)
         #print("****************END******************")
         relevant = [item.zfill(5) for item in relevant]
         #print(relevant)
-        list0 = [x[0].replace('test_txts\\', '') for x, y in sorted_simple_set_based]
-        def precision_at_k(k,pre):
-            try:
-                return pre[:k-1]
-            except:
-                return None
-        print(relevant)
-        #print(list0)
-
-        cnt = 0
-        retrieved = 1
-        recall = []
-        precision = []
-        for doc in list0:
-            if doc in relevant:
-                cnt += 1
-                p = cnt / retrieved
-                r = cnt / len(relevant)
-                precision.append(p)
-                recall.append(r)
-            retrieved += 1
-
-        #print(list0)
-        #print(precision[0:10])
-        #print(recall[0:10])
-        av_precision.append(average(precision))
-        av_recall.append(average(recall))
+        list0 = [x[0].replace('txtfiles\\', '') for x, y in sorted_simple_set_based]
+        pre_rec = pre_rec_calculation(list0,relevant)
+        av_precision.append(pre_rec[0])
+        av_recall.append(pre_rec[1])
+        precision = pre_rec[2]
+        recall = pre_rec[3]
 
         #print("****************list0******************")
-        list1 = [x[0].replace('test_txts\\', '') for x, y in sorted_graphextention_set_based]
+        list1 = [x[0].replace('txtfiles\\', '') for x, y in sorted_graphextention_set_based]
 
-        cnt = 0
-        retrieved = 1
-        recall_gsb = []
-        precision_gsb = []
-        for doc in list1:
-            if doc in relevant:
-                cnt += 1
-                p = cnt / retrieved
-                r = cnt / len(relevant)
-                precision_gsb.append(p)
-                recall_gsb.append(r)
-            retrieved += 1
-        #print(list1)
-        #print(precision_gsb[0:10])
-        #print(recall_gsb[0:10])
-        av_precision_gsb.append(average(precision_gsb))
-        av_recall_gsb.append(average(recall_gsb))
+        pre_rec = pre_rec_calculation(list1, relevant)
+        av_precision_gsb.append(pre_rec[0])
+        av_recall_gsb.append(pre_rec[1])
+        precision = pre_rec[2]
+        recall = pre_rec[3]
 
         #print("****************list1******************")
-        list2 = [x[0].replace('test_txts\\', '') for x, y in sorted_graphextention_set_based_using_main_core]
+        list2 = [x[0].replace('txtfiles\\', '') for x, y in sorted_graphextention_set_based_using_main_core]
+        pre_rec = pre_rec_calculation(list2, relevant)
+        av_precision_gsb_mc.append(pre_rec[0])
+        av_recall_gsb_mc.append(pre_rec[1])
+        precision = pre_rec[2]
+        recall = pre_rec[3]
 
-        cnt = 0
-        retrieved = 1
-        recall_gsb_mc = []
-        precision_gsb_mc = []
-        for doc in list2:
-            if doc in relevant:
-                cnt += 1
-                p = cnt / retrieved
-                r = cnt / len(relevant)
-                precision_gsb_mc.append(p)
-                recall_gsb_mc.append(r)
-            retrieved += 1
-
-        #print(list2)
-        #print(precision_gsb_mc[0:10])
-        #print(recall_gsb_mc[0:10])
-        av_recall_gsb_mc.append(average(recall_gsb_mc))
-        av_precision_gsb_mc.append(average(precision_gsb_mc))
         #print("****************list3******************")
-        list3 = [x[0].replace('test_txts\\', '') for x, y in sorted_graphextention_set_based_using_dens]
+        list3 = [x[0].replace('txtfiles\\', '') for x, y in sorted_graphextention_set_based_using_dens]
 
-        cnt = 0
-        retrieved = 1
-        recall_gsb_dens = []
-        precision_gsb_dens = []
-        for doc in list3:
-            if doc in relevant:
-                cnt += 1
-                p = cnt / retrieved
-                r = cnt / len(relevant)
-                precision_gsb_dens.append(p)
-                recall_gsb_dens.append(r)
-            retrieved += 1
+        pre_rec = pre_rec_calculation(list3, relevant)
+        av_precision_gsb_dens.append(pre_rec[0])
+        av_recall_gsb_dens.append(pre_rec[1])
+        precision = pre_rec[2]
+        recall = pre_rec[3]
 
-        #print(list2)
-        #print(precision_gsb_mc[0:10])
-        #print(recall_gsb_mc[0:10])
 
-        av_recall_gsb_dens.append(average(recall_gsb_dens))
-        av_precision_gsb_dens.append(average(precision_gsb_dens))
         #print("****************list3******************")
         list4 = [x[0].replace('txtfiles\\', '') for x, y in sorted_graphextention_set_based_using_coreRank]
 
-        cnt = 0
-        retrieved = 1
-        recall_gsb_coreRank = []
-        precision_gsb_coreRank = []
-        for doc in list4:
-            if doc in relevant:
-                cnt += 1
-                p = cnt / retrieved
-                r = cnt / len(relevant)
-                precision_gsb_coreRank.append(p)
-                recall_gsb_coreRank.append(r)
-            retrieved += 1
-        av_recall_gsb_coreRank.append(average(recall_gsb_coreRank))
-        av_precision_gsb_coreRank.append(average(precision_gsb_coreRank))
+        pre_rec = pre_rec_calculation(list4, relevant)
+        av_precision_gsb_coreRank.append(pre_rec[0])
+        av_recall_gsb_coreRank.append(pre_rec[1])
+        precision = pre_rec[2]
+        recall = pre_rec[3]
+
         #print("****************list4******************")
         
         
         ############TEST########################
         list5 = [x[0].replace('txtfiles\\', '') for x, y in sorted_graphextention_set_based_using_constant_window]
 
-        cnt = 0
-        retrieved = 1
-        recall_constant_window = []
-        precision_constant_window = []
-        for doc in list5:
-            if doc in relevant:
-                cnt += 1
-                p = cnt / retrieved
-                r = cnt / len(relevant)
-                precision_constant_window.append(p)
-                recall_constant_window.append(r)
-            retrieved += 1
-        av_recall_constant.append(average(recall_constant_window))
-        av_precision_constant.append(average(precision_constant_window))
+        pre_rec = pre_rec_calculation(list5, relevant)
+        av_precision_constant.append(pre_rec[0])
+        av_recall_constant.append(pre_rec[1])
+        precision = pre_rec[2]
+        recall = pre_rec[3]
+
         #print("****************list5******************")
 		
         list6 = [x[0].replace('txtfiles\\', '') for x, y in sorted_graphextention_set_based_using_sen_par_window]
 
-        cnt = 0
-        retrieved = 1
-        recall_sen_par_window = []
-        precision_sen_par_window = []
-        for doc in list6:
-            if doc in relevant:
-                cnt += 1
-                p = cnt / retrieved
-                r = cnt / len(relevant)
-                precision_sen_par_window.append(p)
-                recall_sen_par_window.append(r)
-            retrieved += 1
-        av_recall_sen_par.append(average(recall_sen_par_window))
-        av_precision_sen_par.append(average(precision_sen_par_window))
+        pre_rec = pre_rec_calculation(list6, relevant)
+        av_precision_sen_par.append(pre_rec[0])
+        av_recall_sen_par.append(pre_rec[1])
+        precision = pre_rec[2]
+        recall = pre_rec[3]
+
         #print("****************list5******************")
         #################################################
-
-        k=5
-
-        if len(precision)>=k:
-            av_pre_at_k.append(average(precision_at_k(k,precision)))
-            av_precision_gsb_mc_at_k.append(average(precision_at_k(k,precision_gsb_mc)))
-
-        plt.figure()
-        plt.plot(recall, precision, '-r', label='Simple set based')
-        plt.plot(recall_gsb, precision_gsb, '-b', label='Graph extention')
-        plt.plot(recall_gsb_mc, precision_gsb_mc, '-g', label='Graph extention with main core')
-        plt.plot(recall_gsb_dens, precision_gsb_dens, '-y', label='Graph extention with density method')
-        plt.plot(recall_gsb_coreRank, precision_gsb_coreRank, '-m', label='Graph extention with CoreRank method')
-        
-        #########TEST###########3
-        plt.plot(recall_constant_window, precision_constant_window, '-c', label='Graph extention with Constant Window')
-        plt.plot(recall_sen_par_window, precision_sen_par_window, '-k', label='Graph extention with Sentence/Paragraph Window')
-        ############################ 
-         
-        plt.legend()
-        plt.title('Q:' + str(Query) + '(h=---, support > 0 )')
-        plt.ylabel('precision')
-        plt.xlabel('Recall')
-        plt.grid()
-
-        #plt.show()
-        plt.savefig('figures/allq/'+str(Query)+'.png')
-        plt.close('all')
     print('Av_Precision = ',av_precision)
     print('Av_Recall = ',av_recall)
     print('av_precision_gsb = ',av_precision_gsb)

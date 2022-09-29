@@ -13,6 +13,7 @@ import string
 import nltk
 from nltk.corpus import stopwords
 
+
 translator = str.maketrans('', '', string.punctuation)
 
 from operator import itemgetter
@@ -440,7 +441,7 @@ def one_termsets(Q, trms, plist, minfreq):
     for word in Q:
         if word in trms:
             i = trms.index(word)
-            doc = plist[(i + 1)]
+            doc = plist[(i)]
             doc = doc[::2]
             word = [''.join(word)]
             if len(doc) > minfreq:
@@ -457,16 +458,16 @@ def fij_calculation(docinfo, final_list, plist, trms):
 
     for document in docinfo:
         # print('============doc name =============')
-        print(document[0])
+        #print(document[0])
         docs.append([document[0]])
-        print(final_list)# not needed
+        #print(final_list)# not needed
         # k = 1
         # test is a temp list which contains the termfreq of TSets for the current doc, then we append that list to create
         # a matrix of [Docs X Termsets].
         test = []
         for itemsets in final_list:
             # print('------------------------------%d- termset is:--------------------------------'%k)
-            print(itemsets)
+            #print(itemsets)
             # k+=1
             # print(len(itemsets))
             for i in range(len(itemsets)):
@@ -485,7 +486,7 @@ def fij_calculation(docinfo, final_list, plist, trms):
                             #print(plist[termindx])
                             if document[0] in plist[termindx]:
                                 docindex = plist[termindx].index(document[0])
-                                print('edw:%s'%plist[termindx][docindex+1])
+                                #print('edw:%s'%plist[termindx][docindex+1])
                                 sum += int(plist[termindx][
                                                docindex + 1])  # to amesws epomeno stoixeio antistoixei ston ari8mo emfanisis tou orou TERM(i) sto Document(j)
                     test.append(sum)
@@ -627,3 +628,29 @@ def elbow(listofpoints):
         bestindex = distance.index(bestdistance)
     return bestindex
 # test method
+
+def average(lst):
+    try:
+        return sum(lst)/len(lst)
+    except ZeroDivisionError:
+        return 0
+def pre_rec_calculation(rev_list,relevant):
+    cnt = 0
+    retrieved = 1
+    recall = []
+    precision = []
+    for doc in rev_list:
+        if doc in relevant:
+            cnt += 1
+            p = cnt / retrieved
+            r = cnt / len(relevant)
+            precision.append(p)
+            recall.append(r)
+        retrieved += 1
+
+    #print(list0)
+    #print(precision[0:10])
+    #print(recall[0:10])
+    av_pre = average(precision)
+    av_rec = average(recall)
+    return av_pre, av_rec, precision, recall
